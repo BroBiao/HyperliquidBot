@@ -188,6 +188,15 @@ def update_orders(current_price):
                     last_trade_time = filled_time
                     last_trade_side = filled_trade_side
                     last_trade_qty = filled_trade_qty
+                elif filled_time == last_trade_time:
+                    if (filled_trade_side == last_trade_side == 'BUY') and (filled_trade_price < last_trade_price):
+                        last_trade_qty = filled_trade_qty
+                    elif (filled_trade_side == last_trade_side == 'SELL') and (filled_trade_price > last_refer_price):
+                        last_trade_qty = filled_trade_qty
+                    else:
+                        pass
+                else:
+                    pass
         # 消失的挂单未成交(被取消)，挂单参考价保持不变
         if filled_flag == False:
             refer_price = last_refer_price
