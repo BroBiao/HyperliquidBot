@@ -1,0 +1,2 @@
+# HyperliquidBot
+Hyperliquid Trading Bot
