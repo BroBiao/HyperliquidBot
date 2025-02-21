@@ -160,14 +160,13 @@ def update_orders(current_price):
     # 挂单减少(成交或取消)
     else:
         # 确认消失的挂单是否成交
-        filled_flag = False
+        refer_price = last_refer_price
         filled_message = ''
         last_trade_time = 0
         for order in filled_orders:
             order_info = info.query_order_by_oid(address, order)
             # 确认成交，使用最新成交订单的数据
             if order_info['order']['status'] == 'filled':
-                filled_flag = True
                 order_side = order_info['order']['order']['side']
                 if order_side == 'A':
                     filled_trade_side = 'SELL'
@@ -179,9 +178,9 @@ def update_orders(current_price):
                 filled_trade_price = round(float(order_info['order']['order']['limitPx']), priceDecimals)
                 filled_message += f"{filled_trade_side} {filled_trade_qty}{baseAsset} at {filled_trade_price}\n"
                 if filled_trade_side == 'BUY':
-                    refer_price = (last_refer_price - priceStep)
+                    refer_price -= priceStep
                 else:
-                    refer_price = (last_refer_price + priceStep)
+                    refer_price += priceStep
                 # 更新最新成交订单数据
                 filled_time = order_info['order']['statusTimestamp']
                 if filled_time > last_trade_time:
@@ -191,15 +190,12 @@ def update_orders(current_price):
                 elif filled_time == last_trade_time:
                     if (filled_trade_side == last_trade_side == 'BUY') and (filled_trade_price < last_trade_price):
                         last_trade_qty = filled_trade_qty
-                    elif (filled_trade_side == last_trade_side == 'SELL') and (filled_trade_price > last_refer_price):
+                    elif (filled_trade_side == last_trade_side == 'SELL') and (filled_trade_price > last_trade_price):
                         last_trade_qty = filled_trade_qty
                     else:
                         pass
                 else:
                     pass
-        # 消失的挂单未成交(被取消)，挂单参考价保持不变
-        if filled_flag == False:
-            refer_price = last_refer_price
 
     # 取消剩余挂单
     if open_orders:
@@ -212,7 +208,7 @@ def update_orders(current_price):
         return
 
     # 发送成交信息
-    if filled_orders and filled_flag:
+    if filled_orders and filled_message:
         send_message(filled_message)
 
     buy_orders.clear()
