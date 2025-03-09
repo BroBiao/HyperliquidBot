@@ -1,0 +1,3 @@
+hyperliquid-python-sdk
+python-telegram-bot
+python-dotenv
