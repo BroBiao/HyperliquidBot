@@ -2,7 +2,13 @@
 ---
 
 ## Installation
-`pip3 install -r requirements.txt`
+```
+git clone https://github.com/BroBiao/HyperliquidBot.git
+cd HyperliquidBot
+python3 -m venv venv
+source ./venv/bin/activate
+pip3 install -r requirements.txt
+```
 
 ## Configuration
 - Set the public key (main wallet address) as the `account_address` in config.json.
@@ -25,7 +31,7 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/HyperliquidBot
-ExecStart=/usr/bin/python3 -u /home/ubuntu/HyperliquidBot/grid.py
+ExecStart=/home/ubuntu/HyperliquidBot/venv/bin/python3 -u /home/ubuntu/HyperliquidBot/grid.py
 Restart=always
 RestartSec=5
 

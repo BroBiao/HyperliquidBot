@@ -11,9 +11,9 @@ import utils
 
 
 # 配置参数
-initialBuyQuantity=1
+initialBuyQuantity=2.0
 buyIncrement=0.1
-sellQuantity=1
+sellQuantity=2.0
 priceStep = 0.5
 quantityDecimals = 1
 priceDecimals = 3
@@ -278,7 +278,7 @@ def main():
         except Exception as e:
             traceback.print_exc()
             send_message(str(e))
-            time.sleep(5)
+            time.sleep(60)
 
 if __name__ == "__main__":
     main()
